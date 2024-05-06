@@ -40,7 +40,7 @@ class MyCustomAppBarr extends StatelessWidget implements PreferredSizeWidget {
     return AppBar(
       backgroundColor: Colors.white,
       elevation: 2.0,
-      shadowColor: Color.fromARGB(255, 255, 255, 255),
+      shadowColor: const Color.fromARGB(255, 255, 255, 255),
       leading: IconButton(
         onPressed: () {},
         icon: const Icon(Icons.arrow_back),
@@ -154,7 +154,7 @@ class SearchSection extends StatelessWidget {
               Container(
                 height: 50,
                 width: 1.5,
-                color: Color.fromARGB(255, 218, 217, 217),
+                color: const Color.fromARGB(255, 218, 217, 217),
               ),
               Container(
                 padding: const EdgeInsets.all(10),
@@ -191,8 +191,31 @@ class HotelSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 1000,
-      color: const Color.fromARGB(255, 255, 255, 255),
+      padding: const EdgeInsets.all(10),
+      color: Colors.white,
+      child: Column(
+        children: [
+          Container(
+            height: 50,
+            color: Colors.red,
+            child: const Row(
+              children: [
+                Text("550 hotels founds"),
+                Row(
+                  children: [
+                    Text("Filters"),
+                    Icon(Icons.filter_list),
+                  ],
+                ),
+              ],
+            ),
+          ),
+          Container(
+            height: 1000,
+            color: Colors.blue,
+          )
+        ],
+      ),
     );
   }
 }
