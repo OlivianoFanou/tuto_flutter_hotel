@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_booking/main.dart';
+import 'package:flutter_booking/models/hotel_model.dart';
 import 'package:google_fonts/google_fonts.dart';
 
 class Home extends StatelessWidget {
@@ -8,21 +8,9 @@ class Home extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return const Scaffold(
-      appBar: MyCustomAppBarr(),
-      body: SingleChildScrollView(
-        child: Column(
-          children: [
-            // SEARCH BAR
-            SearchSection(),
-            HotelSection(),
-            // CATEGORIES
-
-            // GRID VIEW
-            // BUTTONS
-          ],
-        ),
-      ),
+    return Scaffold(
+      appBar: const MyCustomAppBarr(),
+      body: HotelSection(),
     );
   }
 }
@@ -185,35 +173,168 @@ class SearchSection extends StatelessWidget {
 }
 
 //****** HOTEL SECTION ****//
+
+// hotel_section.dart
 class HotelSection extends StatelessWidget {
-  const HotelSection({super.key});
+  final List<Hotel> hotels = hotelList;
+
+  HotelSection({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return CustomScrollView(
+      slivers: [
+        SliverToBoxAdapter(
+          child: Column(
+            children: [
+              const SizedBox(
+                height: 230,
+                child: Column(
+                  children: [
+                    SearchSection(),
+                    SizedBox(height: 25),
+                  ],
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.only(left: 20, right: 20, bottom: 23),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      "550 hôtels trouvés",
+                      style: GoogleFonts.nunito(
+                        color: Colors.black,
+                        fontSize: 18,
+                        fontWeight: FontWeight.w800,
+                      ),
+                    ),
+                    Row(
+                      children: [
+                        Text(
+                          "Filtres",
+                          style: GoogleFonts.nunito(
+                            color: Colors.black,
+                            fontSize: 18,
+                            fontWeight: FontWeight.w800,
+                          ),
+                        ),
+                        const SizedBox(width: 10),
+                        const Icon(
+                          Icons.filter_list,
+                          size: 30,
+                          color: dGreen,
+                        ),
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ),
+        SliverList(
+          delegate: SliverChildBuilderDelegate(
+            (context, index) {
+              return HotelCard(hotel: hotels[index]);
+            },
+            childCount: hotels.length,
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+//** HOTEL CARD WIDGET */
+///********************** */
+class HotelCard extends StatelessWidget {
+  final Hotel hotel;
+
+  const HotelCard({required this.hotel, super.key});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(10),
-      color: Colors.white,
+      margin: const EdgeInsets.only(left: 20, right: 20, bottom: 20),
+      decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          color: Colors.white,
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey.shade400,
+              blurRadius: 2,
+              offset: const Offset(1, 1),
+            )
+          ]),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Container(
-            height: 50,
-            color: Colors.red,
-            child: const Row(
+            height: 160,
+            decoration: BoxDecoration(
+                borderRadius: const BorderRadius.only(
+                  topLeft: Radius.circular(10),
+                  topRight: Radius.circular(10),
+                ),
+                image: DecorationImage(
+                  image: AssetImage(hotel.picture),
+                  fit: BoxFit.cover,
+                )),
+            child: Stack(
               children: [
-                Text("550 hotels founds"),
-                Row(
-                  children: [
-                    Text("Filters"),
-                    Icon(Icons.filter_list),
-                  ],
+                Positioned(
+                    top: 1,
+                    right: -20,
+                    child: MaterialButton(
+                      onPressed: () {},
+                      color: Colors.white,
+                      shape: const CircleBorder(),
+                      child: const Icon(
+                        Icons.favorite_border_outlined,
+                        color: dGreen,
+                      ),
+                    )),
+              ],
+            ),
+          ),
+          const SizedBox(height: 10),
+          ListTile(
+            title: Text(
+              hotel.title,
+              style: GoogleFonts.nunito(
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            subtitle: Text(
+              '${hotel.place} - ${hotel.distance} km',
+              style: GoogleFonts.nunito(
+                fontSize: 14,
+                color: Colors.grey,
+              ),
+            ),
+            trailing: Column(
+              children: [
+                Text(
+                  '${hotel.review} avis',
+                  style: GoogleFonts.nunito(
+                    fontSize: 14,
+                    color: Colors.grey,
+                  ),
+                ),
+                const SizedBox(height: 5),
+                Text(
+                  '\$${hotel.price}/nuit',
+                  style: GoogleFonts.nunito(
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ],
             ),
           ),
-          Container(
-            height: 1000,
-            color: Colors.blue,
-          )
         ],
       ),
     );
